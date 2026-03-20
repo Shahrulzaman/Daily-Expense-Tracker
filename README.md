@@ -12,6 +12,7 @@ A simple, intuitive, and responsive web application to track and manage your dai
     - 💎 Highest Expense
 - **Visual Analytics**: Interactive bar chart displaying your monthly spending.
 - **Expense Management**: Add new expenses with Title, Amount (RM), and Date.
+- **Data Persistence**: Uses browser's LocalStorage to securely save your expenses so you don't lose them when you refresh the page.
 - **Yearly Filtering**: Easily filter your expenses and insights by year.
 - **Responsive Design**: fully optimized for desktop, tablet, and mobile devices using Bootstrap 5.
 
