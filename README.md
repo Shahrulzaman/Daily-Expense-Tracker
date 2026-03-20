@@ -14,6 +14,9 @@ A simple, intuitive, and responsive web application to track and manage your dai
 - **Expense Management**: Add new expenses with Title, Amount (RM), and Date.
 - **Data Persistence**: Uses browser's LocalStorage to securely save your expenses so you don't lose them when you refresh the page.
 - **Yearly Filtering**: Easily filter your expenses and insights by year.
+- **Edge Case Handling**: Properly handles empty states, such as displaying "No expenses found" when filtering by a year with no data (e.g., 2020).
+  <br>
+  <img src="empty-state-2020.png" width="500" alt="2020 - Found no expenses">
 - **Responsive Design**: fully optimized for desktop, tablet, and mobile devices using Bootstrap 5.
 
 ## Technologies Used
