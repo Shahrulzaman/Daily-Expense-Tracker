@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Expense Tracker</title>
+    <meta name="description"
+        content="Track and manage your daily expenses with an intuitive expense tracker. Filter by year, visualize monthly spending, and stay on budget.">
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="app-header py-3">
+        <div class="container">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div>
+                    <h1 class="app-title mb-0">💰 Daily Expense Tracker</h1>
+                    <p class="app-subtitle mb-0">Manage your expenses effortlessly</p>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="filter-group d-flex align-items-center gap-2">
+                        <span class="filter-label">Year:</span>
+                        <select id="yearFilter" class="form-select custom-select">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    <button id="btnToggleForm" class="btn btn-add-expense">
+                        <span id="btnToggleText">+ Add Expense</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="container py-4">
+
+        <!-- ===== EXPENSE FORM (Hidden by default) ===== -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div id="expenseFormCard" class="expense-form-card" style="display:none;">
+                    <form id="expenseForm" novalidate>
+                        <div class="row">
+                            <div class="col-12 col-sm-4 mb-3">
+                                <label for="expenseTitle" class="form-label">Title</label>
+                                <input type="text" class="form-control custom-input" id="expenseTitle"
+                                    placeholder="e.g. New TV" required>
+                                <div class="invalid-feedback">Please enter a title.</div>
+                            </div>
+                            <div class="col-12 col-sm-4 mb-3">
+                                <label for="expenseAmount" class="form-label">Amount (RM)</label>
+                                <input type="number" class="form-control custom-input" id="expenseAmount"
+                                    placeholder="e.g. 799.49" min="0.01" step="0.01" required>
+                                <div class="invalid-feedback">Please enter a valid amount.</div>
+                            </div>
+                            <div class="col-12 col-sm-4 mb-3">
+                                <label for="expenseDate" class="form-label">Date</label>
+                                <input type="date" class="form-control custom-input" id="expenseDate" required>
+                                <div class="invalid-feedback">Please select a date.</div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end gap-2 mt-1">
+                            <button type="button" id="btnCancel" class="btn btn-cancel">Cancel</button>
+                            <button type="submit" class="btn btn-submit">Add Expense</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SUMMARY CARDS ROW ===== -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="summary-card">
+                    <div class="summary-icon">📊</div>
+                    <div class="summary-value" id="summaryTotal">RM0.00</div>
+                    <div class="summary-label">Total Expenses</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="summary-card">
+                    <div class="summary-icon">📅</div>
+                    <div class="summary-value" id="summaryAvg">RM0.00</div>
+                    <div class="summary-label">Monthly Average</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="summary-card">
+                    <div class="summary-icon">🧾</div>
+                    <div class="summary-value" id="summaryCount">0</div>
+                    <div class="summary-label">Transactions</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="summary-card">
+                    <div class="summary-icon">💎</div>
+                    <div class="summary-value" id="summaryHighest">RM0.00</div>
+                    <div class="summary-label">Highest Expense</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== DASHBOARD: Chart (Left) + List (Right) ===== -->
+        <div class="row g-4">
+            <!-- LEFT: Bar Chart -->
+            <div class="col-12 col-lg-5">
+                <div class="chart-container h-100">
+                    <h6 class="section-title">Monthly Spending</h6>
+                    <div class="chart-bars" id="chartBars">
+                        <div class="chart-bar-wrapper" data-month="0">
+                            <div class="chart-bar"></div><span class="chart-label">Jan</span>
+                        </div>
+                        <div class="chart-bar-wrapper" data-month="1">
+                            <div class="chart-bar"></div><span class="chart-label">Feb</span>
+                        </div>
+                        <div class="chart-bar-wrapper" data-month="2">
+                            <div class="chart-bar"></div><span class="chart-label">Mar</span>
+                        </div>
+                        <div class="chart-bar-wrapper" data-month="3">
+                            <div class="chart-bar"></div><span class="chart-label">Apr</span>
+                        </div>
+                        <div class="chart-bar-wrapper" data-month="4">
+                            <div class="chart-bar"></div><span class="chart-label">May</span>
+                        </div>
+                        <div class="chart-bar-wrapper" data-month="5">
+                            <div class="chart-bar"></div><span class="chart-label">Jun</span>
+                        </div>
+                        <div class="chart-bar-wrapper" data-month="6">
+                            <div class="chart-bar"></div><span class="chart-label">Jul</span>
+                        </div>
+                        <div class="chart-bar-wrapper" data-month="7">
+                            <div class="chart-bar"></div><span class="chart-label">Aug</span>
+                        </div>
+                        <div class="chart-bar-wrapper" data-month="8">
+                            <div class="chart-bar"></div><span class="chart-label">Sep</span>
+                        </div>
+                        <div class="chart-bar-wrapper" data-month="9">
+                            <div class="chart-bar"></div><span class="chart-label">Oct</span>
+                        </div>
+                        <div class="chart-bar-wrapper" data-month="10">
+                            <div class="chart-bar"></div><span class="chart-label">Nov</span>
+                        </div>
+                        <div class="chart-bar-wrapper" data-month="11">
+                            <div class="chart-bar"></div><span class="chart-label">Dec</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Expense List -->
+            <div class="col-12 col-lg-7">
+                <div class="list-container">
+                    <h6 class="section-title">Recent Expenses</h6>
+                    <div id="expenseList">
+                        <!-- Rendered by JS -->
+                    </div>
+                    <p id="noExpensesMsg" class="no-expenses-msg text-center" style="display:none;">Found no expenses.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="app-footer text-center py-3 mt-4">
+        <div class="container">
+            <p class="mb-0">&copy; 2026 Daily Expense Tracker &mdash; SRKK Assessment</p>
+        </div>
+    </footer>
+
+    <!-- jQuery 3.x -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- App JS -->
+    <script src="app.js"></script>
+</body>
+
+</html>

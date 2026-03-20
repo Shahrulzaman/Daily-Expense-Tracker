@@ -1,0 +1,630 @@
+/* ============================================
+   Daily Expense Tracker — Corporate Blue Theme
+   Full Dashboard: summary cards + chart + list
+   ============================================ */
+
+/* ---------- CSS Variables ---------- */
+:root {
+    --bg-body: #f0f4f8;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f8fafc;
+    --bg-input: #f5f7fa;
+    --blue-primary: #2563eb;
+    --blue-light: #3b82f6;
+    --blue-dark: #1d4ed8;
+    --blue-glow: rgba(37, 99, 235, 0.2);
+    --blue-50: #eff6ff;
+    --blue-100: #dbeafe;
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --danger: #ef4444;
+    --success: #22c55e;
+    --bar-bg: #e2e8f0;
+    --bar-fill: linear-gradient(180deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%);
+    --border-light: #e2e8f0;
+    --border-blue: rgba(37, 99, 235, 0.15);
+    --radius: 14px;
+    --radius-sm: 10px;
+    --transition: 0.3s ease;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow: 0 4px 16px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.04);
+    --shadow-blue: 0 4px 20px rgba(37, 99, 235, 0.18);
+}
+
+/* ---------- Reset & Base ---------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-body);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue-dark), var(--blue-light), var(--blue-primary));
+    z-index: 999;
+}
+
+body>* {
+    position: relative;
+    z-index: 1;
+}
+
+/* ---------- Header ---------- */
+.app-header {
+    background: #ffffff;
+    border-bottom: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+}
+
+.app-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+}
+
+.app-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.3px;
+}
+
+/* ---------- Add Expense Button ---------- */
+.btn-add-expense {
+    background: var(--blue-primary);
+    color: #fff;
+    border: none;
+    padding: 9px 24px;
+    border-radius: 28px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    box-shadow: var(--shadow-blue);
+    transition: all var(--transition);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-add-expense::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.5s, height 0.5s;
+}
+
+.btn-add-expense:hover::after {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-add-expense:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(37, 99, 235, 0.3);
+    background: var(--blue-light);
+    color: #fff;
+}
+
+.btn-add-expense:active {
+    transform: translateY(0);
+}
+
+/* ---------- Filter ---------- */
+.filter-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.custom-select {
+    background-color: var(--bg-input) !important;
+    border: 1.5px solid var(--border-light);
+    color: var(--text-primary) !important;
+    border-radius: var(--radius-sm);
+    padding: 6px 36px 6px 14px;
+    font-size: 0.9rem;
+    width: auto;
+    min-width: 85px;
+    cursor: pointer;
+    transition: border-color var(--transition);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%232563eb' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 10px center !important;
+    background-size: 14px 14px !important;
+}
+
+.custom-select:focus {
+    border-color: var(--blue-primary);
+    box-shadow: 0 0 0 3px var(--blue-glow);
+}
+
+/* ---------- Summary Cards ---------- */
+.summary-card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 20px;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+    transition: all var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.summary-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue-primary), var(--blue-light));
+    opacity: 0;
+    transition: opacity var(--transition);
+}
+
+.summary-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+}
+
+.summary-card:hover::before {
+    opacity: 1;
+}
+
+.summary-icon {
+    font-size: 1.5rem;
+    margin-bottom: 6px;
+}
+
+.summary-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 4px;
+}
+
+.summary-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-muted);
+}
+
+/* ---------- Expense Form Card ---------- */
+.expense-form-card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-light);
+    animation: fadeSlideIn 0.35s ease;
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.custom-input {
+    background: var(--bg-input) !important;
+    border: 1.5px solid var(--border-light);
+    color: var(--text-primary) !important;
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.custom-input:focus {
+    border-color: var(--blue-primary);
+    box-shadow: 0 0 0 3px var(--blue-glow);
+    outline: none;
+    background: #fff !important;
+}
+
+.custom-input::placeholder {
+    color: var(--text-muted);
+}
+
+.custom-input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+}
+
+.btn-cancel {
+    background: transparent;
+    border: 1.5px solid var(--border-light);
+    color: var(--text-secondary);
+    padding: 8px 24px;
+    border-radius: 28px;
+    font-weight: 500;
+    transition: all var(--transition);
+}
+
+.btn-cancel:hover {
+    background: var(--bg-input);
+    color: var(--text-primary);
+    border-color: #cbd5e1;
+}
+
+.btn-submit {
+    background: var(--blue-primary);
+    color: #fff;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 28px;
+    font-weight: 600;
+    transition: all var(--transition);
+}
+
+.btn-submit:hover {
+    background: var(--blue-light);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-blue);
+}
+
+/* ---------- Section Titles ---------- */
+.section-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+}
+
+/* ---------- Bar Chart ---------- */
+.chart-container {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 22px 18px 14px;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-bars {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 200px;
+    gap: 5px;
+    flex: 1;
+}
+
+.chart-bar-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: flex-end;
+    position: relative;
+}
+
+.chart-bar {
+    width: 100%;
+    max-width: 38px;
+    min-height: 4px;
+    background: var(--bar-bg);
+    border-radius: 7px 7px 3px 3px;
+    transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    cursor: pointer;
+}
+
+.chart-bar.active {
+    background: var(--bar-fill);
+    box-shadow: 0 2px 10px rgba(37, 99, 235, 0.2);
+}
+
+.chart-bar:hover {
+    opacity: 0.85;
+    transform: scaleX(1.1);
+}
+
+.chart-bar-wrapper .chart-tooltip {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%);
+    background: var(--text-primary);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 8px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 10;
+}
+
+.chart-bar-wrapper:hover .chart-tooltip {
+    opacity: 1;
+}
+
+.chart-label {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+/* ---------- Expense List Container ---------- */
+.list-container {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 22px;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    min-height: 280px;
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+/* ---------- Expense Items ---------- */
+.expense-item {
+    background: var(--bg-body);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    border: 1px solid transparent;
+    transition: all var(--transition);
+    animation: itemSlideIn 0.35s ease;
+}
+
+@keyframes itemSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.expense-item:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-blue);
+    transform: translateX(4px);
+    box-shadow: var(--shadow-sm);
+}
+
+.expense-date-badge {
+    background: var(--blue-primary);
+    color: #fff;
+    border-radius: 8px;
+    padding: 6px 8px;
+    text-align: center;
+    min-width: 50px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+}
+
+.expense-date-badge .month {
+    font-size: 0.55rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    line-height: 1;
+    opacity: 0.9;
+    letter-spacing: 0.5px;
+}
+
+.expense-date-badge .year-small {
+    font-size: 0.5rem;
+    font-weight: 400;
+    opacity: 0.75;
+    line-height: 1;
+}
+
+.expense-date-badge .day {
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.expense-info {
+    flex: 1;
+    margin-left: 14px;
+}
+
+.expense-info .expense-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.expense-amount-badge {
+    background: var(--blue-50);
+    color: var(--blue-primary);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border: 1px solid var(--blue-100);
+}
+
+.expense-delete-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1rem;
+    cursor: pointer;
+    margin-left: 10px;
+    padding: 4px 8px;
+    border-radius: 50%;
+    transition: all var(--transition);
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.expense-delete-btn:hover {
+    color: var(--danger);
+    background: rgba(239, 68, 68, 0.08);
+    transform: scale(1.2);
+}
+
+/* ---------- No Expenses Message ---------- */
+.no-expenses-msg {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    padding: 35px 0;
+    font-weight: 400;
+}
+
+/* ---------- Footer ---------- */
+.app-footer {
+    border-top: 1px solid var(--border-light);
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    background: #fff;
+}
+
+/* ---------- Validation States ---------- */
+.was-validated .custom-input:invalid,
+.custom-input.is-invalid {
+    border-color: var(--danger) !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+}
+
+.invalid-feedback {
+    font-size: 0.78rem;
+    color: var(--danger);
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--blue-primary);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 991px) {
+    .chart-bars {
+        height: 140px;
+    }
+
+    .list-container {
+        max-height: none;
+    }
+}
+
+@media (max-width: 767px) {
+    .summary-card {
+        padding: 14px;
+    }
+
+    .summary-value {
+        font-size: 1.05rem;
+    }
+
+    .summary-label {
+        font-size: 0.65rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .app-title {
+        font-size: 1.3rem;
+    }
+
+    .app-header .d-flex {
+        flex-direction: column;
+        align-items: stretch !important;
+        text-align: center;
+    }
+
+    .app-header .d-flex>.d-flex {
+        justify-content: center;
+    }
+
+    .chart-bars {
+        height: 100px;
+    }
+
+    .chart-label {
+        font-size: 0.58rem;
+    }
+
+    .expense-item {
+        padding: 10px 12px;
+    }
+
+    .expense-date-badge {
+        min-width: 44px;
+        padding: 5px 6px;
+    }
+
+    .expense-date-badge .day {
+        font-size: 1rem;
+    }
+
+    .expense-amount-badge {
+        padding: 4px 10px;
+        font-size: 0.75rem;
+    }
+}
