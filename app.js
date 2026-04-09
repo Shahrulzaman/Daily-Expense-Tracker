@@ -42,7 +42,7 @@ $(document).ready(function () {
         const currentYear = new Date().getFullYear();
         const yearSet = new Set();
         // Always show years from 2020 to current year
-        for (let y = currentYear; y >= 2020; y--) {
+        for (let y = currentYear; y >= 2023; y--) {
             yearSet.add(y);
         }
         // Also add any year that has expense data
